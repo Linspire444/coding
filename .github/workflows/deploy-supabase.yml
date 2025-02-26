@@ -13,12 +13,11 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
-            - name: Instalar Supabase CLI
+      - name: Instalar Supabase CLI
         run: |
           curl -fsSL https://deb.supabase.com/install.sh | sh
-          export PATH="/home/runner/.supabase/bin:$PATH"
+          echo "$HOME/.supabase/bin" >> $GITHUB_PATH
           supabase --version  # Testa se o CLI foi instalado corretamente
-
 
       - name: Verificar versão do Supabase CLI
         run: supabase --version
