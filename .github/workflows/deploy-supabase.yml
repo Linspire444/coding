@@ -13,21 +13,18 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Instalar dependências
-        run: sudo apt-get update && sudo apt-get install -y unzip curl
-
       - name: Instalar Supabase CLI
         run: |
-          curl -fsSL https://github.com/supabase/cli/releases/latest/download/supabase-linux-amd64 -o supabase
-          chmod +x supabase
-          sudo mv supabase /usr/local/bin/
+          curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+          npm install -g supabase
           supabase --version  # Testa se o CLI foi instalado corretamente
 
       - name: Verificar versão do Supabase CLI
         run: supabase --version
 
       - name: Autenticar no Supabase
-        run: supabase link --project-ref "$(echo ${{ secrets.SUPABASE_URL }} | awk -F/ '{print $3}' | cut -d'.' -f1)"
+        run: supabase link --project-ref "${{ secrets.SUPABASE_URL }}"
 
       - name: Deploy das migrações do banco de dados
         run: supabase db push
