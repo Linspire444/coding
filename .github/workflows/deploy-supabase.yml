@@ -13,15 +13,13 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Instalar dependências
-        run: sudo apt update && sudo apt install curl unzip -y
+      - name: Instalar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18  # Versão recomendada
 
       - name: Instalar Supabase CLI
-        run: |
-          curl -fsSL https://github.com/supabase/cli/releases/latest/download/supabase-linux-amd64 -o supabase
-          chmod +x supabase
-          sudo mv supabase /usr/local/bin/
-          supabase --version  # Testa se o CLI foi instalado corretamente
+        run: npm install -g supabase
 
       - name: Verificar versão do Supabase CLI
         run: supabase --version
@@ -36,4 +34,4 @@ jobs:
         run: supabase functions deploy --all
 
       - name: Deploy finalizado
-        run: echo "Deploy para o Supabase concluído com sucesso! 🚀"
+        run: echo "✅ Deploy para o Supabase concluído com sucesso! 🚀"
