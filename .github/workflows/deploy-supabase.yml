@@ -16,7 +16,7 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # Versão corrigida do Node.js
+          node-version: '18'
 
       - name: Instalar Supabase CLI (localmente no projeto)
         run: npm install --save-dev supabase
@@ -25,7 +25,9 @@ jobs:
         run: npx supabase --version
 
       - name: Autenticar no Supabase
-        run: npx supabase link --project-ref "${{ secrets.SUPABASE_URL }}" --token "${{ secrets.SUPABASE_ACCESS_TOKEN }}"
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: npx supabase link --project-ref "${{ secrets.SUPABASE_URL }}"
 
       - name: Deploy das migrações do banco de dados
         run: npx supabase db push
