@@ -28,7 +28,7 @@ jobs:
         run: npx supabase --version
 
       - name: Autenticar no Supabase
-        run: npx supabase link --project-ref "${{ secrets.SUPABASE_URL }}"
+        run: npx supabase link --project-ref "${{ secrets.SUPABASE_PROJECT_REF }}"
 
       - name: Deploy das migrações do banco de dados
         run: npx supabase db push
