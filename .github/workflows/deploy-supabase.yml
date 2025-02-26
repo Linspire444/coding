@@ -13,11 +13,16 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Instalar dependências
+      - name: Instalar Node.js
+        uses: actions/setup-node@v18
+        with:
+          node-version: 18
+
+      - name: Instalar dependências do projeto
         run: npm install
 
-      - name: Instalar Supabase CLI
-        run: npm install -g supabase
+      - name: Instalar Supabase CLI (localmente no projeto)
+        run: npm install --save-dev supabase
 
       - name: Verificar versão do Supabase CLI
         run: npx supabase --version
