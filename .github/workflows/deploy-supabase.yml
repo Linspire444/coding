@@ -1,26 +1,32 @@
-name: Deploy para Supabase
+name: Deploy Supabase
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch: # Permite iniciar manualmente pelo GitHub Actions
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout do código
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Instalar Supabase CLI
-        run: npm install -g supabase
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-      - name: Verificar versão do Supabase CLI
+      - name: Install Supabase CLI
+        run: |
+          curl -fsSL https://deb.supabase.com/install | sh
+          export PATH="/home/runner/.supabase/bin:$PATH"
+          echo "PATH=/home/runner/.supabase/bin:$PATH" >> $GITHUB_ENV
+
+      - name: Verify Supabase CLI
         run: supabase --version
 
-      - name: Autenticar no Supabase
+      - name: Authenticate to Supabase
         run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -28,13 +34,13 @@ jobs:
       - name: Debug DATABASE_URL
         run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}"
 
-      - name: Deploy das migrações do banco de dados
+      - name: Deploy database migrations
         run: npx supabase db push
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: Deploy das funções e storage
+      - name: Deploy Supabase functions and storage
         run: npx supabase functions deploy --all
 
-      - name: Deploy finalizado
+      - name: Deployment Complete
         run: echo "✅ Deploy para o Supabase concluído com sucesso!"
