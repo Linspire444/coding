@@ -1,8 +1,27 @@
+name: Deploy para Supabase
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Permite iniciar manualmente pelo GitHub Actions
+
 jobs:
   deploy:
+    runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Instalar Supabase CLI
+        run: npm install -g supabase
+
+      - name: Verificar versão do Supabase CLI
+        run: supabase --version
+
       - name: Autenticar no Supabase
-        run: npx supabase link --project-ref "${{ secrets.SUPABASE_PROJECT_REF }}"
+        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
@@ -16,3 +35,6 @@ jobs:
 
       - name: Deploy das funções e storage
         run: npx supabase functions deploy --all
+
+      - name: Deploy finalizado
+        run: echo "✅ Deploy para o Supabase concluído com sucesso!"
