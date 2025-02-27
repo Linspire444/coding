@@ -1,4 +1,4 @@
-name: Deploy Supabase
+name: Deploy para o Supabase
 
 on:
   push:
@@ -14,12 +14,15 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Instalar Supabase CLI (localmente no projeto)
-        run: npm install supabase --save-dev
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Instalar Supabase CLI
+        run: npm install -g supabase
 
       - name: Verificar versão do Supabase CLI
         run: npx supabase --version
